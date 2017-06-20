@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace用于与DAO层的接口类进行绑定,这样我们无需实现DAO层的接口
+    类,其接口类就能够自动的找到相关的SQL语句进行绑定实现-->
+<mapper namespace="com.luo.dao.customerDao">
+<!--设置domain类和数据库中表的字段一一对应！-->
+	<resultMap id="BaseResultMap" type="Customer">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="created_at" property="created_at" jdbcType="DATE"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR"/>
+		<result column="mail" property="mail" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="degree" property="degree" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="maturity" property="maturity" jdbcType="VARCHAR"/>
+		<result column="company" property="company" jdbcType="VARCHAR"/>
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="industry" property="industry" jdbcType="VARCHAR" />
+		<result column="telphone" property="telphone" jdbcType="VARCHAR" />
+		<result column="infomation" property="infomation" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List" >
+    id,created_at,name,sex,city,mail,phone,type,status,degree,source,maturity,company,address,industry,telphone,infomation
+ 	 </sql>
+ 	 
+ 	 <!--根据主键查询一条客户数据 -->
+ 	 <select id="selectCustomerById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+ 	 	SELECT <include refid="Base_Column_List"/> FROM customer where id = #{id,jdbcType=INTEGER} 	 
+ 	 </select>
+
+	<!-- 根据分页数据start 和size查询数据 -->
+	<select id="selectCustomerByPage" resultType="Customer" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> FROM customer 
+		<if test="start != null and size != null">
+		limit #{start},#{size}
+		</if>
+	</select>
+	
+	<!--查询所有Customer数据 -->
+	<select id="selectCustomerList" resultType="Customer" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> FROM customer 
+	</select>
+	
+	<!-- 查询总Customer数 -->
+	<select id="selectCount" resultType="int">
+    	select count(1) from customer
+    </select>
+	
+	<!--根据主键删除一条Customer数据 -->
+	<delete id="deleteCustomerById" parameterType="java.lang.Integer">
+		delete from customer where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 插入customer记录
+	useGeneratedKeys设置为"true"表明要MyBatis获取由数据库自动生成的主键；keyProperty="id"指定把获取到的主键值注入到customer的id属性-->
+	<insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">  
+        INSERT INTO customer (created_at,name,sex,city,mail,phone,type,status,degree,source,maturity,company,address,industry,telphone,infomation)
+        		VALUES(#{created_at,jdbcType=DATE},#{name,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},#{city,jdbcType=VARCHAR},#{mail,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+        		#{type,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{degree,jdbcType=VARCHAR},#{source,jdbcType=VARCHAR},#{maturity,jdbcType=VARCHAR},
+        		#{company,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{industry,jdbcType=VARCHAR},#{telphone,jdbcType=VARCHAR},#{infomation,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 更新客户信息 -->  
+	<update id="updateCustomerById" parameterType="Customer">  
+        UPDATE customer  
+            SET customer.created_at = #{created_at,jdbcType=DATE},
+            	customer.name = #{name,jdbcType=VARCHAR},
+            	customer.sex = #{sex,jdbcType=VARCHAR},
+                customer.city = #{city,jdbcType=VARCHAR},
+                customer.mail = #{mail,jdbcType=VARCHAR},
+                customer.phone = #{phone,jdbcType=VARCHAR},
+                customer.type = #{type,jdbcType=VARCHAR},
+                customer.status = #{status,jdbcType=VARCHAR},
+                customer.degree = #{degree,jdbcType=VARCHAR},
+                customer.source = #{source,jdbcType=VARCHAR},
+            	customer.maturity = #{maturity,jdbcType=VARCHAR},
+                customer.company = #{company,jdbcType=VARCHAR},
+                customer.address = #{address,jdbcType=VARCHAR},
+                customer.industry = #{industry,jdbcType=VARCHAR},
+                customer.telphone = #{telphone,jdbcType=VARCHAR},
+                customer.infomation = #{infomation,jdbcType=VARCHAR}
+         WHERE customer.id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

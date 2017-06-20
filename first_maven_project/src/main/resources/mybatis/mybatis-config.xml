@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>
+
+    <!--为com.luo.domain.User设置别名 User 方便调用-->
+    <!--为com.luo.domain.Employee设置别名 Employee 方便调用-->
+    <!--为com.luo.domain.Offer设置别名 Offer 方便调用-->
+     <!--为com.luo.domain.Customer设置别名 Offer 方便调用-->
+    <typeAliases>
+        <typeAlias alias="User" type="com.luo.domain.User"/>
+        <typeAlias alias="Employee" type="com.luo.domain.Employee"/>
+        <typeAlias alias="Offer" type="com.luo.domain.Offer"/>
+        <typeAlias alias="Customer" type="com.luo.domain.Customer"/>
+    </typeAliases>
+    
+</configuration>

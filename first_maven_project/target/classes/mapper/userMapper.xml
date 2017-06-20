@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace用于与DAO层的接口类进行绑定,这样我们无需实现DAO层的接口
+    类,其接口类就能够自动的找到相关的SQL语句进行绑定实现-->
+<mapper namespace="com.luo.dao.UserDao">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不-致，此处一定要！-->
+	<resultMap id="BaseResultMap" type="User">
+		<id column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="USER_NAME" property="userName" jdbcType="CHAR" />
+		<result column="USER_PASSWORD" property="userPassword" jdbcType="CHAR" />
+	</resultMap>
+	<!-- 查询单条记录 按主键id查询 -->
+	<!--select表示查询,它的id名称必须与DAO层接口的方法名相同,否则无法绑定-->
+	<select id="selectUserById" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE USER_ID = #{userId}
+	</select>
+	
+	<!-- 查询单条记录 按用户名查询 -->
+	<!--select表示查询,它的id名称必须与DAO层接口的方法名相同,否则无法绑定-->
+	<select id="selectUserByName" parameterType="string" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE USER_NAME = #{userName}
+	</select>
+	
+	<!-- 查询总的记录 -->
+	<select id="selectUserAll" resultType="com.luo.domain.User" resultMap="BaseResultMap">
+		SELECT * FROM t_user
+	</select>
+	
+	<!-- 插入用户记录
+	useGeneratedKeys设置为"true"表明要MyBatis获取由数据库自动生成的主键；keyProperty="USER_ID"指定把获取到的主键值注入到User的USER_ID属性-->
+	<insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="USER_ID">  
+        INSERT INTO t_user (USER_NAME,USER_PASSWORD)
+        		VALUES(#{userName},#{userPassword})
+	</insert>	
+	
+	<!-- 更新用户信息 -->  
+	<update id="updateUserById" parameterType="User">  
+        UPDATE t_user  
+            SET t_user.USER_NAME = #{userName},   
+                t_user.USER_PASSWORD = #{userPassword}
+         WHERE t_user.USER_ID = #{userId}   
+	</update>
+
+</mapper>

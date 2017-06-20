@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace用于与DAO层的接口类进行绑定,这样我们无需实现DAO层的接口
+    类,其接口类就能够自动的找到相关的SQL语句进行绑定实现-->
+<mapper namespace="com.luo.dao.OfferDao">
+<!--设置domain类和数据库中表的字段一一对应！-->
+	<resultMap id="BaseResultMap" type="Offer">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="provider" property="provider" jdbcType="INTEGER"/>
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="pkg" property="pkg" jdbcType="VARCHAR"/>
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="click" property="click" jdbcType="VARCHAR"/>
+		<result column="offerid" property="offerid" jdbcType="VARCHAR"/>
+		<result column="price" property="price" jdbcType="FLOAT" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="created_at" property="created_at" jdbcType="DATE" />
+	</resultMap>
+	
+	<sql id="Base_Column_List" >
+    id,type,provider,name,pkg,country,click,offerid,price,status,created_at
+ 	 </sql>
+
+	<!-- 查询总的offer记录 -->
+	<!--select表示查询,它的id名称必须与DAO层接口的方法名相同,否则无法绑定-->
+	<select id="selectOfferAll" resultType="Offer" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> FROM offer
+	</select>
+	
+	<!-- 根据id查询单条记录 -->
+	<select id="selectOfferById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> FROM offer WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	
+	<!-- 插入offer记录
+	useGeneratedKeys设置为"true"表明要MyBatis获取由数据库自动生成的主键；keyProperty="id"指定把获取到的主键值注入到offer的id属性-->
+	<insert id="insertOffer" parameterType="Offer" useGeneratedKeys="true" keyProperty="id">  
+        INSERT INTO offer (type,provider,name,pkg,country,click,offerid,price,status,created_at)
+        		VALUES(#{type,jdbcType=INTEGER},#{provider,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{pkg,jdbcType=VARCHAR},#{country,jdbcType=VARCHAR},
+        		#{click,jdbcType=VARCHAR},#{offerid,jdbcType=VARCHAR},#{price,jdbcType=FLOAT},#{status,jdbcType=INTEGER},#{created_at,jdbcType=DATE})
+	</insert>
+	
+	<!-- 更新offer信息 -->  
+	<update id="updateOfferById" parameterType="Offer">
+        UPDATE offer  
+            SET offer.type = #{type,jdbcType=INTEGER},   
+            	offer.provider = #{provider,jdbcType=INTEGER},
+            	offer.name = #{name,jdbcType=VARCHAR},
+                offer.pkg = #{pkg,jdbcType=VARCHAR},
+                offer.country = #{country,jdbcType=VARCHAR},
+                offer.click = #{click,jdbcType=VARCHAR},
+                offer.offerid = #{offerid,jdbcType=VARCHAR},
+                offer.price = #{price,jdbcType=FLOAT},
+                offer.status = #{status,jdbcType=INTEGER},  
+                offer.created_at = #{created_at,jdbcType=DATE}
+         WHERE offer.id = #{id,jdbcType=INTEGER}  
+	</update> 
+	
+	<!-- 删除offer -->  
+	<delete id="deleteOfferById" parameterType="java.lang.Integer">  
+        DELETE FROM offer WHERE id = #{id,jdbcType=INTEGER}  
+	</delete> 
+	
+	<!-- 分页全家桶 -->
+	<!-- 查询总offer数 -->
+	<select id="selectCount" resultType="int">
+    	select count(1) from offer    
+    </select>
+	
+	<!-- 每页offer数 -->
+	<select id="limit" resultType="Offer" >
+    	select * from offer limit #{startIndex},#{pageSize}   
+    </select>
+	
+	<select id="selectByWhere" resultType="Offer" parameterType="String">
+    	select * from offer ${where}    
+    </select>
+    
+    <select id="countByWhere" resultType="int" parameterType="String">
+    	select count(1) from offer ${where} 
+    </select>
+    
+    <select id="queryBywhere" resultType="Offer" parameterType="String">
+  		${where}
+    </select>
+	
+</mapper>
